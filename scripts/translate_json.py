@@ -196,12 +196,13 @@ async def translate_json_file(json_file_path: Path, translated_json_path: Path, 
         if segment['text']:
             segment['text'] = translated_texts[text_index] if text_index < len(translated_texts) else segment['text']
             text_index += 1
-        for word in segment['words']:
+        seg_translated_words = segment['text'].split()
+        for i, word in enumerate(segment['words']):
             if word_index < len(translated_words):
                 word['word'] = translated_words[word_index]
                 word_index += 1
-            else:
-                print(f"\nWarning: Not enough translated words. Keeping original word: {word['word']}")
+            elif i < len(seg_translated_words):
+                word['word'] = seg_translated_words[i]
 
     # Adjust segment word timings post-translation
     segments = adjust_segments(segments)
