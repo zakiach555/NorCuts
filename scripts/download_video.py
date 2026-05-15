@@ -104,10 +104,20 @@ def download(url, base_root="VIRALS", download_subs=True, quality="best"):
     selected_format = quality_map.get(quality, 'bestvideo+bestaudio/best')
     print(i18n("Configuring download quality: {} -> {}").format(quality, selected_format))
 
+    # Look for cookies.txt in script root or CWD
+    _script_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    _cookies_candidates = [
+        os.path.join(_script_dir, 'cookies.txt'),
+        os.path.join(os.getcwd(), 'cookies.txt'),
+    ]
+    cookies_file = next((p for p in _cookies_candidates if os.path.exists(p)), None)
+    if cookies_file:
+        print(i18n("Using cookies file: {}").format(cookies_file))
+
     ydl_opts = {
         'format': selected_format,
         'overwrites': True,
-        'outtmpl': output_path_base, 
+        'outtmpl': output_path_base,
         'postprocessor_args': [
             '-movflags', 'faststart'
         ],
@@ -115,7 +125,7 @@ def download(url, base_root="VIRALS", download_subs=True, quality="best"):
         'progress_hooks': [progress_hook],
         'writesubtitles': download_subs,
         'writeautomaticsub': download_subs,
-        'subtitleslangs': ['pt.*', 'en.*', 'sp.*'], # Prioritize generic PT, EN, SP
+        'subtitleslangs': ['pt.*', 'en.*', 'sp.*'],
         'http_headers': {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         },
@@ -124,6 +134,9 @@ def download(url, base_root="VIRALS", download_subs=True, quality="best"):
         'no_warnings': False,
         'force_ipv4': True,
     }
+
+    if cookies_file:
+        ydl_opts['cookiefile'] = cookies_file
     
 
     
