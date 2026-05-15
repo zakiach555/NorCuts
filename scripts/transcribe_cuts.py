@@ -1,0 +1,53 @@
+import os
+import subprocess
+import sys
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+def transcribe(project_folder="tmp"):
+    def generate_whisperx(input_file, output_folder, model='large-v3'):
+        output_file = os.path.join(output_folder, f"{os.path.splitext(os.path.basename(input_file))[0]}.srt")
+        json_file = os.path.join(output_folder, f"{os.path.splitext(os.path.basename(input_file))[0]}.json")
+
+        if os.path.exists(json_file):
+            print(f"File already exists, skipping: {json_file}")
+            return
+
+        command = [
+            "whisperx",
+            input_file,
+            "--model", model,
+            "--task", "transcribe",
+            "--align_model", "WAV2VEC2_ASR_LARGE_LV60K_960H",
+            "--chunk_size", "10",
+            "--vad_onset", "0.4",
+            "--vad_offset", "0.3",
+            "--compute_type", "float32",
+            "--batch_size", "10",
+            "--output_dir", output_folder,
+            "--output_format", "srt",
+            "--output_format", "json",
+        ]
+
+        print(f"Transcribing: {input_file}...")
+        result = subprocess.run(command, shell=True, text=True, capture_output=True)
+        print(f"Command executed: {command}")
+
+        if result.returncode != 0:
+            print("Transcription error:")
+            print(result.stderr)
+        else:
+            print(f"Transcription completed. Files saved: {output_file} and {json_file}")
+
+    input_folder = os.path.join(project_folder, 'final')
+    output_folder = os.path.join(project_folder, 'subs')
+    os.makedirs(output_folder, exist_ok=True)
+
+    if not os.path.exists(input_folder):
+        print(f"Input folder not found: {input_folder}")
+        return
+
+    for filename in os.listdir(input_folder):
+        if filename.endswith('.mp4'):
+            input_file = os.path.join(input_folder, filename)
+            generate_whisperx(input_file, output_folder)
