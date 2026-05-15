@@ -279,8 +279,8 @@ def run_viral_cutter(input_source, project_name, url, video_file, segments, vira
         subtitle_config = {
             "font": font_name, "base_size": int(font_size), "base_color": convert_color_to_ass(font_color), "highlight_color": convert_color_to_ass(highlight_color),
             "outline_color": convert_color_to_ass(outline_color), "outline_thickness": outline_thickness, "shadow_color": convert_color_to_ass(shadow_color),
-            "shadow_size": shadow_size, "vertical_position": vertical_pos, "alignment": alignment, "bold": 1 if is_bold else 0, "italic": 1 if is_italic else 0, 
-            "underline": 1 if under else 0, "strikeout": 1 if strike else 0, "border_style": border_s, "words_per_block": int(w_block), "gap_limit": gap,
+            "shadow_size": shadow_size, "vertical_position": vertical_pos, "alignment": alignment, "bold": -1 if is_bold else 0, "italic": -1 if is_italic else 0,
+            "underline": -1 if under else 0, "strikeout": -1 if strike else 0, "border_style": border_s, "words_per_block": int(w_block), "gap_limit": gap,
             "mode": mode, "highlight_size": int(h_size), "remove_punctuation": remove_punc
         }
         # Uppercase is handled in main script or logic? 
@@ -581,7 +581,7 @@ import header
 
 with gr.Blocks(title=i18n("NorCuts WebUI"), theme=gr.themes.Default(primary_hue="orange", neutral_hue="slate"), css=css) as demo:
     gr.Markdown(header.badges)
-    gr.Markdown(header.description)
+    gr.HTML(header.description)
     with gr.Tabs():
         with gr.Tab(i18n("Create New")):
              with gr.Row():
@@ -924,11 +924,11 @@ with gr.Blocks(title=i18n("NorCuts WebUI"), theme=gr.themes.Default(primary_hue=
                         "outline_color": convert_color_to_ass(outline_color), 
                         "outline_thickness": outline_thickness, 
                         "shadow_color": convert_color_to_ass(shadow_color),
-                        "shadow_size": shadow_size, "vertical_position": vertical_pos, 
-                        "alignment": alignment, "bold": 1 if is_bold else 0, 
-                        "italic": 1 if is_italic else 0, 
-                        "underline": 1 if under else 0, "strikeout": 1 if strike else 0, 
-                        "border_style": border_s, "words_per_block": int(w_block), 
+                        "shadow_size": shadow_size, "vertical_position": vertical_pos,
+                        "alignment": alignment, "bold": -1 if is_bold else 0,
+                        "italic": -1 if is_italic else 0,
+                        "underline": -1 if under else 0, "strikeout": -1 if strike else 0,
+                        "border_style": border_s, "words_per_block": int(w_block),
                         "gap_limit": gap, "mode": mode, "highlight_size": int(h_size),
                         "uppercase": 1 if is_uppercase else 0,
                         "remove_punctuation": remove_punc
@@ -943,7 +943,7 @@ with gr.Blocks(title=i18n("NorCuts WebUI"), theme=gr.themes.Default(primary_hue=
                         if os.path.exists(subtitle_config_path):
                             os.remove(subtitle_config_path)
                     except Exception: pass
-                
+
                 # We expect user to SAVE first, but we could auto-save.
                 # For now assume saved.
                 msg = editor.render_specific_video(json_path)
@@ -971,11 +971,11 @@ with gr.Blocks(title=i18n("NorCuts WebUI"), theme=gr.themes.Default(primary_hue=
                         "outline_color": convert_color_to_ass(outline_color), 
                         "outline_thickness": outline_thickness, 
                         "shadow_color": convert_color_to_ass(shadow_color),
-                        "shadow_size": shadow_size, "vertical_position": vertical_pos, 
-                        "alignment": alignment, "bold": 1 if is_bold else 0, 
-                        "italic": 1 if is_italic else 0, 
-                        "underline": 1 if under else 0, "strikeout": 1 if strike else 0, 
-                        "border_style": border_s, "words_per_block": int(w_block), 
+                        "shadow_size": shadow_size, "vertical_position": vertical_pos,
+                        "alignment": alignment, "bold": -1 if is_bold else 0,
+                        "italic": -1 if is_italic else 0,
+                        "underline": -1 if under else 0, "strikeout": -1 if strike else 0,
+                        "border_style": border_s, "words_per_block": int(w_block),
                         "gap_limit": gap, "mode": mode, "highlight_size": int(h_size),
                         "uppercase": 1 if is_uppercase else 0,
                         "remove_punctuation": remove_punc
@@ -1036,8 +1036,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.colab:
-        print("Running in Colab mode. Generating public link with Static Mounts...")
-        library.set_url_mode("fastapi")
+        print("Running in Colab mode. Generating public link...")
+        library.set_url_mode("gradio")
         
         # Broaden allowed paths for Colab
         allowed_dirs = [VIRALS_DIR, WORKING_DIR, os.getcwd(), "."]
