@@ -1,0 +1,26 @@
+{
+  "version": "0.2",
+  "words": [
+    "VIRALS",
+    "virals",
+    "deadzone",
+    "GGUF",
+    "gguf",
+    "segs",
+    "whisperx",
+    "insightface",
+    "mediapipe",
+    "onnxruntime",
+    "torchaudio",
+    "torchvision",
+    "nvenc",
+    "libx264",
+    "ffmpeg",
+    "gradio",
+    "ngrok",
+    "uvicorn",
+    "fastapi",
+    "NorCuts",
+    "norcuts"
+  ]
+}
